@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <!-- Add your CSS stylesheets and JavaScript files here -->
+</head>
+<body>
+    <h1>Profile</h1>
+
+    <!-- Account Information -->
+    <h2>Account Information</h2>
+    <p>Name: John Doe</p>
+    <p>Email: johndoe@example.com</p>
+    <!-- Add more account information fields as needed -->
+
+    <!-- Edit Functionality -->
+    <h2>Edit Account</h2>
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="John Doe">
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="johndoe@example.com">
+        <br>
+        <!-- Add more input fields for editing account information -->
+        <br>
+        <input type="submit" value="Save Changes">
+    </form>
+
+    <!-- Subscription Information -->
+   <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = form.name.value;
+            const email = form.email.value;
+            // Add more variables for other input fields
+            const response = await fetch('/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email })
+            });
+            const data = await response.json();
+            if (data.status === 'ok') {
+                alert('Profile updated successfully');
+            } else {
+                alert(data.error);
+            }
+        });
+        
+    </script>
+    <h2>Subscription Information</h2>
+    <p>Plan: Basic</p>
+    <p>Renewal Date: January 1, 2022</p>
+    <!-- Add more subscription information fields as needed -->
+
+    <!-- Change Plan Functionality -->
+    <h2>Change Plan</h2>
+    <form>
+        <label for="plan">Plan:</label>
+        <select id="plan" name="plan">
+            <option value="basic">Basic</option>
+            <option value="premium">Premium</option>
+            <option value="enterprise">Enterprise</option>
+        </select>
+        <br>
+        <label for="renewal-date">Renewal Date:</label>
+        <input type="date" id="renewal-date" name="renewal-date" value="2022-01-01">
+        <br>
+        <input type="submit" value="Change Plan">
+    </form>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const plan = form.plan.value;
+            const renewalDate = form['renewal-date'].value;
+            // Add more variables for other input fields
+            const response = await fetch('/change-plan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ plan, renewalDate })
+            });
+            const data = await response.json();
+            if (data.status === 'ok') {
+                alert('Plan changed successfully');
+            } else {
+                alert(data.error);
+            }
+        });
+    </script>
+
+</body>
+</html>
