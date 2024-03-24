@@ -28,7 +28,7 @@
             const username = form.username.value;
             const email = form.email.value;
             const password = form.password.value;
-            const response = await fetch('/register', {
+            const response = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
