@@ -1,3 +1,4 @@
+const express = require('express');
 const MonitoringConfig = require('./MonitoringConfigModel');
 const router = express.Router();
 

@@ -18,23 +18,26 @@ function auth(req, res, next) {
     req.user = verified;
     next();
   } catch (error) {
-    res.status(400).send('Invalid token');
+    res.status(400).send({error:'Invalid token'});
   }
 }
 
 router.post('/login', async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(400).send('User not found');
+      user = await User.findOne({ username: req.body.username });
+      if (!user) {
+        return res.status(400).send({error:'User not found'});
+      }
     }
 
     // In a real app, compare hashed passwords
     // const isMatch = await bcrypt.compare(req.body.password, user.passwordHash);
-    const isMatch = req.body.password === user.passwordHash;
+    const isMatch =  await bcrypt.compare(req.body.password, user.passwordHash); 
 
     if (!isMatch) {
-      return res.status(400).send('Invalid credentials');
+      return res.status(400).send({error:'Invalid credentials'});
     }
 
     user.lastLogin = new Date();
@@ -45,9 +48,9 @@ router.post('/login', async (req, res) => {
     // save the token in the session cookie
     res.cookie('token', token, { httpOnly: true });
     // Send back a token or a success message in a real app
-    res.send('Login successful');
+    res.send({success:"Login successful"});
   } catch (error) {
-    res.status(500).send(error.toString());
+    res.status(500).send({error:error.toString()});
   }
 });
 
@@ -86,7 +89,7 @@ router.get('/users', async (req,auth, res) => {
     res.json(users);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send({error:'Server error'});
   }
 });
 
@@ -120,7 +123,7 @@ router.put('/users/:id', async (req, auth, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send({error:'Server error'});
   }
 });
 
@@ -135,7 +138,7 @@ router.delete('/users/:id', async (req, auth, res) => {
     res.json({ msg: 'User removed' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send({error:'Server error'});
   }
 });
 
@@ -150,7 +153,7 @@ router.get('/users/email/:email', async (req, auth, res) => {
     res.json(user);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send({error:'Server error'});
   }
 });
 
@@ -171,7 +174,7 @@ router.put('/users/email/:email', async (req, res) => {
     } 
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send({error:'Server error'});
   }
 });
 
@@ -187,7 +190,7 @@ router.delete('/users/email/:email', async (req, res) => {
     res.json({ msg: 'User removed' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send({error:'Server error'});
   }
 });
 

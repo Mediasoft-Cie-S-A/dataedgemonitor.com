@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-mongoose.connect(process.env.DB_URI, {
+mongoose.connect("mongodb://0.0.0.0:27017/dataedgemonitor", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
